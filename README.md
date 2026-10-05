@@ -1,9 +1,11 @@
-# MTM Overwatch — Tactical Outreach & Territorial Intelligence
+# MTM Overwatch (Overwatch - Client Diagnostic) — Tactical Outreach & Territorial Intelligence
 ### *Diagnostic Radar & Client Intelligence Engine for Reign (Chief Revenue Architect)*
 **Entity:** MT Media AI (@mtmediaai) | Modern Touch Media  
+**Canonical Label:** `mtm-overwatch` (Overwatch - Client Diagnostic)  
 **Department:** Reign Revenue Division (Sales & Closer Operations)  
 **Target Demographic:** The Invisible Elite (Estate-Level Service Providers)  
 **Status:** CANONICAL OUTREACH REPOSITORY | Protocol: MTM-SLS-001  
+**Integration Surfaces:** Softr Diagnosis Chamber Client Portal & UULE Proximity Blind Spot Grid  
 
 ---
 
@@ -11,10 +13,11 @@
 
 **MTM Overwatch** is the client intelligence and outreach briefing engine operated by **Reign**, Chief Revenue Architect of MT Media AI.
 
-It generates high-status, personalized diagnostic dossiers for prospective clients categorized as **First Round Draft Picks** within our targeted luxury corridors. Instead of generic sales pitches or cold email spam, Overwatch equips Reign with forensic, evidence-grounded competitive intelligence:
-- Current AI search invisibility metrics (ChatGPT Search, Perplexity, Gemini, Google AI Overviews).
-- Knowledge graph entity sparsity analysis.
-- Competitive displacement mapping (showing who is currently taking their rightful recommendations).
+It serves as the client-facing presentation vehicle integrated into the **Softr Diagnosis Chamber Client Portal**, featuring:
+- **The UULE Proximity Blind Spot Grid (3x5 / 5x5 Geo-Grid):** Visual proof showing how local visibility drops off precipitously starting from their office and vanishing just 2–5 miles away on Google Maps and Google AI Search.
+- **Current AI Search Invisibility Metrics:** (ChatGPT Search, Perplexity, Gemini, Google AI Overviews).
+- **Knowledge Graph Entity Sparsity Analysis:** Proving why models hedge towards generic competitors.
+- **Territory Lockout Architecture:** Proving why only 4 non-competing seats are available per zip code.
 
 ---
 
