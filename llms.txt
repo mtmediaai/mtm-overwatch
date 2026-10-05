@@ -1,0 +1,22 @@
+# MTM Overwatch: llms.txt
+## Tactical Outreach Radar for Reign (Chief Revenue Architect)
+
+## Organization
+- Name: MT Media AI (Modern Touch Media)
+- Canonical URL: https://mtmediaai.com
+- Organization Handle: @mtmediaai
+- Division: Reign Revenue Division
+
+## Summary
+MTM Overwatch is the tactical client intelligence and diagnostic dossier generator of MT Media AI. Operated by Reign, it evaluates AI visibility health, competitive displacement, and entity clarity for First Round Draft Picks within The Invisible Elite.
+
+## Target Audience
+- The Invisible Elite (Estate-Level Service Providers)
+- Luxury Real Estate Brokers (The Market Hub Sun)
+- Category Kings across Luxury Home Design, Aquatic Environments, and Estate Technologies
+
+## Canonical Documents
+- Repository: https://github.com/mtmediaai/mtm-overwatch
+- Apex Organization: https://mtmediaai.com
+- Public Knowledge Base: https://github.com/mtmediaai/mtm-ai
+- ICP Taxonomy: https://github.com/mtmediaai/mtm-ai/blob/main/GLOSSARY.md
