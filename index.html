@@ -736,6 +736,152 @@
     color: var(--text-body);
     line-height: 1.6;
   }
+  .uule-node.selected {
+    border-color: var(--gold-glossy) !important;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.35) !important;
+    background: rgba(30, 25, 10, 0.4) !important;
+  }
+  .uule-target-tag {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: var(--gold-glossy);
+    color: #000;
+    font-size: 8px;
+    font-weight: 800;
+    padding: 2px 5px;
+    letter-spacing: 0.1em;
+    border-bottom-left-radius: 4px;
+    font-family: var(--font-body);
+  }
+  .uule-tactical-board {
+    margin-top: 24px;
+    margin-bottom: 24px;
+    background: linear-gradient(145deg, rgba(16, 16, 22, 0.95), rgba(8, 8, 12, 0.98));
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.7);
+    text-align: left;
+  }
+  .uule-tactical-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 16px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+  }
+  .uule-tactical-agent-tabs {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    background: #0d0d0d;
+    padding: 6px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .uule-tactical-tab-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--muted);
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .uule-tactical-tab-btn:hover {
+    color: var(--chrome-white);
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .uule-tactical-tab-btn.active {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: #fff;
+    font-weight: 700;
+  }
+  .uule-tactical-quote-box {
+    margin: 18px 0;
+    padding: 14px 18px;
+    background: rgba(255, 255, 255, 0.02);
+    border-left: 3px solid var(--gold-glossy);
+    border-radius: 4px;
+    font-style: italic;
+    color: var(--chrome-white);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .uule-tactical-steps-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 18px;
+  }
+  @media(max-width: 768px) {
+    .uule-tactical-steps-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .uule-tactical-step-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: var(--text-body);
+    line-height: 1.5;
+  }
+  .uule-tactical-step-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: var(--gold-glossy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .uule-tactical-cta-box {
+    background: linear-gradient(135deg, #15151c, #0a0a0e);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 8px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .uule-deploy-btn {
+    margin-top: 14px;
+    background: linear-gradient(90deg, var(--gold-matte), var(--gold-glossy));
+    color: #000;
+    font-weight: 800;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 12px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);
+  }
+  .uule-deploy-btn:hover {
+    filter: brightness(1.15);
+    transform: translateY(-1px);
+  }
 
   /* ── FORGE AUDIO PLAYER ── */
   .forge-wrap {
@@ -1325,6 +1471,11 @@
 
   <div class="uule-grid-container" id="uuleGridContainer">
     <!-- Populated dynamically via renderUuleGrid() -->
+  </div>
+
+  <!-- PLAN OF ATTACK SANCTUARY CONTAINER -->
+  <div id="uuleTacticalSanctuary" class="uule-tactical-board">
+    <!-- Populated dynamically via renderTacticalSanctuary() -->
   </div>
 
   <div class="uule-explanation">
@@ -2007,6 +2158,212 @@
   let activeClient = "Marquise Custom Pools";
   let activeKeyword = "Luxury Custom Pools";
 
+  let selectedUuleNodeId = "R1C3";
+  let overrideUuleAgent = null;
+
+  function generateForgePlanData(node, clientName, requestedAgent) {
+    const isCentroid = node.dist === 0.0;
+    const isNearRing = node.dist > 0.0 && node.dist <= 1.5;
+    const isMidRing = node.dist > 1.5 && node.dist <= 3.0;
+    const isOuterRing = node.dist > 3.0;
+
+    let optimalAgent = "roman";
+    if (isCentroid) optimalAgent = "goldie";
+    else if (isOuterRing) optimalAgent = "nina";
+    else if (isNearRing) optimalAgent = "roman";
+    else if (isMidRing) optimalAgent = (node.zip === "77389") ? "echo" : "roman";
+
+    const activeAgent = requestedAgent || optimalAgent;
+
+    if (activeAgent === "roman") {
+      return {
+        key: "roman",
+        name: "Roman",
+        title: "The Analytical Spine • Business Logic & Structural Reality",
+        color: "#E5E4E2",
+        urgency: isOuterRing ? "CRITICAL" : "HIGH",
+        diagnosis: `Algorithmic UULE signal decay at ${node.dist} miles. Google Maps ranks geometric proximity by default; without structured boundary coordinates, proximity bias plunges your rank to #${node.dist > 3 ? "20+" : "4-9"}.`,
+        moveTitle: "Perimeter Leapfrog Schema Injection (Protocol MTM-LEAP-01)",
+        steps: [
+          `Compile JSON-LD GeoShape polygon centered on ${node.name} (Zip ${node.zip}).`,
+          `Embed nested 'areaServed' postal code [${node.zip}] and GPS boundary lat/long into root Organization schema.`,
+          `Link high-resolution service entities to override the default 1.5-mile centroid cliff without paid ads.`
+        ],
+        quote: `"Mathematical reality doesn't care about your craftsmanship if the search spider can't calculate your service boundary. We don't guess—we inject the exact coordinates the algorithm demands."`
+      };
+    } else if (activeAgent === "nina") {
+      return {
+        key: "nina",
+        name: "Negative Nina",
+        title: "The Skeptical Shield • Anti-Hallucination & Reality Gate",
+        color: "#FFFFFF",
+        urgency: "CRITICAL",
+        diagnosis: `Silent Erasure Alert. In Sector ${node.id} (${node.name}), your business is practically non-existent on Google Maps. Inferior competitors with 20% of your tenure are intercepting $50k+ contracts right under your nose.`,
+        moveTitle: "Citation & Competitor Cloaking Purge (Protocol MTM-PURGE-03)",
+        steps: [
+          `Audit and eradicate 14 fragmented Name-Address-Phone (NAP) mismatches across Montgomery County directories.`,
+          `File algorithmic map-pack spam disputes against fake virtual addresses currently occupying the 3-Pack in ${node.zip}.`,
+          `Deploy a verified Service Area Business (SAB) authoritative node anchored to ${node.name}.`
+        ],
+        quote: `"Let's stop lying to ourselves: your 15-year word-of-mouth moat does not protect you here. When an affluent buyer moves into ${node.name}, they don't know you. They search on their phone, see a mediocre competitor, and sign the check. We kill that today."`
+      };
+    } else if (activeAgent === "goldie") {
+      return {
+        key: "goldie",
+        name: "Goldie",
+        title: "The Nurturing Visionary • Spark & High-Ticket Aspiration",
+        color: "#D4AF37",
+        urgency: isCentroid ? "SECURED" : "HIGH",
+        diagnosis: `High-ticket estate owners in ${node.name} have the liquid capital and desire for world-class craftsmanship. But right now, your digital presence here doesn't reflect your actual status.`,
+        moveTitle: "Visual & Video Entity Anchor Deployment (Protocol MTM-GOLD-02)",
+        steps: [
+          `Seed 4K showcase video assets with GPS EXIF metadata embedded directly in ${node.name} project locations.`,
+          `Publish YouTube video schema with localized chapter timestamps matching '${activeKeyword} in ${node.name}'.`,
+          `Anchor Google Knowledge Graph entities to high-value architectural case studies completed in this sector.`
+        ],
+        quote: `"Your work is pure gold—true art. The tragedy is that wealthy homeowners in ${node.name} are settling for franchise mediocrity because they simply haven't seen your portfolio. Let's make you impossible to ignore."`
+      };
+    } else {
+      return {
+        key: "echo",
+        name: "Echo",
+        title: "The CX Shadow • Customer Sentiment & Market Voice",
+        color: "#00E5FF",
+        urgency: "HIGH",
+        diagnosis: `Relocation Sentiment Blind Spot. ${node.name} (${node.zip}) is experiencing an influx of corporate transplants from New York and California who do not rely on local country-club word of mouth.`,
+        moveTitle: "Transplant Consensus & Sentiment Lock (Protocol MTM-ECHO-04)",
+        steps: [
+          `Activate review velocity syndication linking verified reviews from ${node.zip} residents to your knowledge panel.`,
+          `Construct localized FAQ & Decision Matrix addressing high-net-worth relocators moving into ${node.name}.`,
+          `Ground entity trust signals across regional homeowner association and luxury lifestyle publications.`
+        ],
+        quote: `"I listen to what the clients actually say when they arrive. They don't have time to ask neighbors; they ask Google and AI Overviews. If your reputation isn't machine-readable, your word-of-mouth moat evaporates with every new resident."`
+      };
+    }
+  }
+
+  function selectUuleSector(nodeId) {
+    selectedUuleNodeId = nodeId;
+    overrideUuleAgent = null; // Reset override so engine auto-selects optimal Forge member
+    renderUuleGrid(activeClient, activeKeyword);
+  }
+
+  function setForgeCounsel(agentKey) {
+    overrideUuleAgent = agentKey;
+    renderTacticalSanctuary();
+  }
+
+  function renderTacticalSanctuary() {
+    const sanctuary = document.getElementById('uuleTacticalSanctuary');
+    if (!sanctuary) return;
+
+    const node = WOODLANDS_GRID_DATA.find(n => n.id === selectedUuleNodeId) || WOODLANDS_GRID_DATA[2];
+    const plan = generateForgePlanData(node, activeClient, overrideUuleAgent);
+
+    const isRomanActive = plan.key === 'roman';
+    const isNinaActive = plan.key === 'nina';
+    const isGoldieActive = plan.key === 'goldie';
+    const isEchoActive = plan.key === 'echo';
+
+    sanctuary.innerHTML = `
+      <div class="uule-tactical-header">
+        <div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+            <span style="font-size:10px; font-weight:700; color:var(--gold-matte); text-transform:uppercase; letter-spacing:0.15em; background:rgba(212,175,55,0.12); padding:3px 8px; border-radius:4px; border:1px solid rgba(212,175,55,0.25);">
+              SECTOR RECLAIM BRIEFING • ${node.id}
+            </span>
+            <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:${plan.color}; background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:4px;">
+              ${plan.urgency} PRIORITY
+            </span>
+          </div>
+          <h3 style="font-family:var(--font-display); font-size:22px; color:var(--chrome-white); margin-bottom:4px;">
+            ${node.name} <span style="font-size:14px; font-family:var(--font-body); color:var(--muted);">(${node.zip} • ${node.dist} mi from Centroid)</span>
+          </h3>
+          <p style="font-size:12px; color:var(--text-body); margin:0;">
+            Simulated Query: <strong style="color:var(--chrome-white);">&ldquo;${activeKeyword} ${node.name}&rdquo;</strong>
+          </p>
+        </div>
+
+        <div class="uule-tactical-agent-tabs">
+          <span style="font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; padding-right:4px;">Forge Counsel:</span>
+          <button type="button" class="uule-tactical-tab-btn ${isRomanActive ? 'active' : ''}" onclick="setForgeCounsel('roman')">
+            <span style="width:6px; height:6px; border-radius:50%; background:#E5E4E2; display:inline-block;"></span>
+            Roman
+          </button>
+          <button type="button" class="uule-tactical-tab-btn ${isNinaActive ? 'active' : ''}" onclick="setForgeCounsel('nina')">
+            <span style="width:6px; height:6px; border-radius:50%; background:#FFFFFF; display:inline-block;"></span>
+            Negative Nina
+          </button>
+          <button type="button" class="uule-tactical-tab-btn ${isGoldieActive ? 'active' : ''}" onclick="setForgeCounsel('goldie')">
+            <span style="width:6px; height:6px; border-radius:50%; background:#D4AF37; display:inline-block;"></span>
+            Goldie
+          </button>
+          <button type="button" class="uule-tactical-tab-btn ${isEchoActive ? 'active' : ''}" onclick="setForgeCounsel('echo')">
+            <span style="width:6px; height:6px; border-radius:50%; background:#00E5FF; display:inline-block;"></span>
+            Echo
+          </button>
+        </div>
+      </div>
+
+      <div class="uule-tactical-quote-box">
+        <div style="font-size:11px; font-weight:700; color:var(--gold-glossy); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:4px; font-style:normal;">
+          ${plan.name} — ${plan.title}
+        </div>
+        ${plan.quote}
+      </div>
+
+      <div class="uule-tactical-steps-grid">
+        <div>
+          <div style="font-size:11px; font-weight:700; color:var(--gold-glossy); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+            <span>⚡ NEXT & BEST TACTICAL MOVE:</span>
+            <span style="color:var(--chrome-white);">${plan.moveTitle}</span>
+          </div>
+          <div>
+            ${plan.steps.map((st, i) => `
+              <div class="uule-tactical-step-item">
+                <div class="uule-tactical-step-num">${i + 1}</div>
+                <div>${st}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="uule-tactical-cta-box">
+          <div>
+            <span style="font-size:9px; font-weight:800; color:var(--gold-matte); text-transform:uppercase; letter-spacing:0.15em; display:block; margin-bottom:6px;">
+              Zero-Paid-Ads Mandate
+            </span>
+            <h4 style="font-family:var(--font-display); font-size:15px; color:var(--chrome-white); margin-bottom:6px;">
+              Deploy Sector Reclaim
+            </h4>
+            <p style="font-size:11px; color:var(--text-body); line-height:1.5; margin:0;">
+              Execute verified organic entity engineering to recapture high-ticket client inquiries in ${node.name} without renting Google Ads.
+            </p>
+          </div>
+          <button type="button" class="uule-deploy-btn" onclick="deploySectorReclaim('${node.id}', '${node.name}')">
+            Deploy Protocol →
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  function deploySectorReclaim(nodeId, nodeName) {
+    playMidasThud();
+    alert(`[MT MEDIA AI • MISSION CONTROL]\nSector Reclaim Protocol initiated for ${nodeName} (${nodeId}).\n\nAssigned Lead: Tactical Engine Active\nMethod: 100% Organic Zero-COGS Entity Engineering\nEstimated Indexation: 7-14 Days.`);
+    
+    // Notify parent frame (Softr / Palace Diagnosis Chamber)
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({
+        type: 'MTM_OVERWATCH_DEPLOY_PROTOCOL',
+        client: activeClient,
+        nodeId: nodeId,
+        nodeName: nodeName,
+        timestamp: new Date().toISOString()
+      }, '*');
+    }
+  }
+
   function renderUuleGrid(clientName, queryKeyword) {
     const container = document.getElementById('uuleGridContainer');
     if (!container) return;
@@ -2022,6 +2379,7 @@
       const uule = encodeUule(node.uuleLoc);
       const encodedQ = encodeURIComponent(queryKeyword + " " + node.name);
       const searchUrl = `https://www.google.com/search?q=${encodedQ}&uule=${uule}`;
+      const isSelected = node.id === selectedUuleNodeId;
 
       let statusClass = '';
       let rankBadge = '';
@@ -2044,11 +2402,16 @@
         rankBadge = `<span class="uule-rank-badge rank-blind">✕ Blind Spot (>20)</span>`;
       }
 
+      if (isSelected) {
+        statusClass += ' selected';
+      }
+
       html += `
-        <div class="uule-node ${statusClass}">
+        <div class="uule-node ${statusClass}" onclick="selectUuleSector('${node.id}')" style="cursor:pointer;">
+          ${isSelected ? `<div class="uule-target-tag">TARGET</div>` : ''}
           <div>
             <div class="uule-node-top">
-              <span class="uule-node-id">${node.id}</span>
+              <span class="uule-node-id" style="${isSelected ? 'color:var(--gold-glossy); font-weight:800;' : ''}">${node.id}</span>
               <span class="uule-node-dist">${node.dist} mi</span>
             </div>
             <div class="uule-node-loc">
@@ -2058,8 +2421,9 @@
           </div>
           <div>
             ${rankBadge}
-            <div>
-              <a href="${searchUrl}" target="_blank" rel="noopener noreferrer" class="uule-live-link">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:9px; color:var(--muted);">${isSelected ? '● ACTIVE' : 'Click to Plan'}</span>
+              <a href="${searchUrl}" target="_blank" rel="noopener noreferrer" class="uule-live-link" onclick="event.stopPropagation()">
                 <span>Simulate &uule=</span>
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
@@ -2074,6 +2438,9 @@
     });
 
     container.innerHTML = html;
+
+    // Render interactive tactical plan of attack board
+    renderTacticalSanctuary();
 
     // Update banner metrics
     const total = WOODLANDS_GRID_DATA.length;
@@ -2094,6 +2461,7 @@
         keyword: queryKeyword,
         dominantNodes: dominantCount,
         blindSpotPercentage: blindPct,
+        selectedSector: selectedUuleNodeId,
         timestamp: new Date().toISOString()
       }, '*');
     }
